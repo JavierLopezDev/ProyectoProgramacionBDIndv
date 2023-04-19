@@ -13,6 +13,8 @@ public class Jugadores extends javax.swing.JDialog {
     private VentanaProyectoBD miPadre = null;
     /**
      * Creates new form Jugadores
+     * @param parent
+     * @param modal
      */
     public Jugadores(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
