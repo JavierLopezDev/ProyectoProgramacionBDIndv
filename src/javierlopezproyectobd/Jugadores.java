@@ -10,12 +10,15 @@ package javierlopezproyectobd;
  */
 public class Jugadores extends javax.swing.JDialog {
 
+    private VentanaProyectoBD miPadre = null;
     /**
      * Creates new form Jugadores
      */
     public Jugadores(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        miPadre = (VentanaProyectoBD) parent;
+        prueba.setText("" + miPadre.getIdEquipo());
     }
 
     /**
@@ -77,7 +80,7 @@ public class Jugadores extends javax.swing.JDialog {
 
     private void pruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pruebaActionPerformed
         // TODO add your handling code here:
-        prueba.setText("");
+        //prueba.setText("" + miPadre.getIdEquipo());        
     }//GEN-LAST:event_pruebaActionPerformed
 
     /**

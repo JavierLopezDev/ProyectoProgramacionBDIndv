@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -23,6 +24,10 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
     public static final String USERNAME = "root";
     public static final String PASSWORD = "toor";
     DefaultTableModel dtmClasificaion = null;
+    
+    public String getIdEquipo(){
+        return txf_id.getText();
+    }
 
     /**
      * Creates new form VentanaProyectoBD
@@ -35,7 +40,9 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
             Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         txf_id.setEnabled(false);
+        visualizarClasificacion();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,7 +58,6 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         tbl_Clasificacion = new javax.swing.JTable();
         lbl_titulo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        btn_conectarBD = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -96,14 +102,6 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
         jLabel1.setText("CLASIFICACIÓN:");
-
-        btn_conectarBD.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        btn_conectarBD.setText("CONECTAR BD");
-        btn_conectarBD.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_conectarBDActionPerformed(evt);
-            }
-        });
 
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
         jLabel2.setText("ID:");
@@ -163,10 +161,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
                                 .addComponent(txf_ciudad, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(340, 340, 340)
-                                .addComponent(btn_conectarBD))
+                            .addComponent(jLabel1)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 556, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(85, 85, 85))))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -206,10 +201,8 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
                             .addComponent(btn_jugadores)
                             .addComponent(btn_consultaEquipo)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(btn_conectarBD))
+                        .addGap(79, 79, 79)
+                        .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(208, Short.MAX_VALUE))
@@ -225,16 +218,11 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 6, Short.MAX_VALUE))
+                .addGap(0, 10, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btn_conectarBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_conectarBDActionPerformed
-        // TODO add your handling code here:
-        visualizarClasificacion();
-    }//GEN-LAST:event_btn_conectarBDActionPerformed
 
     private void tbl_ClasificacionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_ClasificacionMouseClicked
         // TODO add your handling code here:
@@ -318,7 +306,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
             s = co.createStatement();
             rs = s.executeQuery("select idEquipo from equipo where nombre = " + '"' + equipo + '"');
             while (rs.next()) {
-                id = rs.getObject(1);
+                id = rs.getObject(1);                
             }
         } catch (SQLException ex) {
             Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
@@ -385,7 +373,6 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_conectarBD;
     private javax.swing.JButton btn_consultaEquipo;
     private javax.swing.JButton btn_jugadores;
     private javax.swing.JLabel jLabel1;
