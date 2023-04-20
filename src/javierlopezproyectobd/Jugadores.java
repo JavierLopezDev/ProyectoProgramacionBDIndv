@@ -58,13 +58,14 @@ public class Jugadores extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_jugadores = new javax.swing.JTable();
         btn_quitarFiltros = new javax.swing.JButton();
+        btn_addJugador = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel2.setBackground(new java.awt.Color(102, 204, 255));
 
         btn_portero.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        btn_portero.setText("Portero");
+        btn_portero.setText("PORTERO");
         btn_portero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_porteroActionPerformed(evt);
@@ -75,7 +76,7 @@ public class Jugadores extends javax.swing.JDialog {
         jLabel1.setText("Posiciones:");
 
         btn_defensa.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        btn_defensa.setText("Defensa");
+        btn_defensa.setText("DEFENSA");
         btn_defensa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_defensaActionPerformed(evt);
@@ -83,7 +84,7 @@ public class Jugadores extends javax.swing.JDialog {
         });
 
         btn_medio.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        btn_medio.setText("Centrocampista");
+        btn_medio.setText("CENTROCAMPISTA");
         btn_medio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_medioActionPerformed(evt);
@@ -91,7 +92,7 @@ public class Jugadores extends javax.swing.JDialog {
         });
 
         btn_delantero.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        btn_delantero.setText("Delantero");
+        btn_delantero.setText("DELANTERO");
         btn_delantero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_delanteroActionPerformed(evt);
@@ -112,10 +113,18 @@ public class Jugadores extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tbl_jugadores);
 
         btn_quitarFiltros.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        btn_quitarFiltros.setText("Quitar filtros");
+        btn_quitarFiltros.setText("QUITAR FILTROS");
         btn_quitarFiltros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_quitarFiltrosActionPerformed(evt);
+            }
+        });
+
+        btn_addJugador.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        btn_addJugador.setText("AÑADIR JUGADORES");
+        btn_addJugador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_addJugadorActionPerformed(evt);
             }
         });
 
@@ -124,10 +133,6 @@ public class Jugadores extends javax.swing.JDialog {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(538, 538, 538)
-                .addComponent(btn_quitarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(322, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -135,16 +140,21 @@ public class Jugadores extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(btn_defensa, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btn_medio, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_medio)
                         .addGap(18, 18, 18)
                         .addComponent(btn_delantero, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(314, 314, 314))
+                        .addGap(310, 310, 310))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(373, 373, 373))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(546, 546, 546))))
+                        .addGap(546, 546, 546))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(btn_quitarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_addJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(418, 418, 418))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,7 +170,9 @@ public class Jugadores extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btn_quitarFiltros)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_quitarFiltros)
+                    .addComponent(btn_addJugador))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
@@ -208,6 +220,10 @@ public class Jugadores extends javax.swing.JDialog {
         int idEquipo = miPadre.getIdEquipo();
         visualizarJugadores(idEquipo);
     }//GEN-LAST:event_btn_quitarFiltrosActionPerformed
+
+    private void btn_addJugadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addJugadorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_addJugadorActionPerformed
 
     public void visualizarJugadores(int idEquipo) {
         Statement s = null;
@@ -418,6 +434,7 @@ public class Jugadores extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_addJugador;
     private javax.swing.JButton btn_defensa;
     private javax.swing.JButton btn_delantero;
     private javax.swing.JButton btn_medio;
