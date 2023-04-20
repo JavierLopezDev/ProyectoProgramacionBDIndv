@@ -4,6 +4,19 @@
  */
 package javierlopezproyectobd;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import static javierlopezproyectobd.VentanaProyectoBD.PASSWORD;
+import static javierlopezproyectobd.VentanaProyectoBD.URL;
+import static javierlopezproyectobd.VentanaProyectoBD.USERNAME;
+import static javierlopezproyectobd.VentanaProyectoBD.hazConexion;
+
 /**
  *
  * @author usuario
@@ -11,8 +24,11 @@ package javierlopezproyectobd;
 public class Jugadores extends javax.swing.JDialog {
 
     private VentanaProyectoBD miPadre = null;
+    DefaultTableModel dtmJugadores = null;
+
     /**
      * Creates new form Jugadores
+     *
      * @param parent
      * @param modal
      */
@@ -20,7 +36,8 @@ public class Jugadores extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         miPadre = (VentanaProyectoBD) parent;
-        prueba.setText("" + miPadre.getIdEquipo());
+        int idEquipo = miPadre.getIdEquipo();
+        visualizarJugadores(idEquipo);
     }
 
     /**
@@ -33,15 +50,72 @@ public class Jugadores extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        prueba = new javax.swing.JTextField();
+        btn_portero = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        btn_defensa = new javax.swing.JButton();
+        btn_medio = new javax.swing.JButton();
+        btn_delantero = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbl_jugadores = new javax.swing.JTable();
+        btn_quitarFiltros = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel2.setBackground(new java.awt.Color(102, 204, 255));
 
-        prueba.addActionListener(new java.awt.event.ActionListener() {
+        btn_portero.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        btn_portero.setText("Portero");
+        btn_portero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pruebaActionPerformed(evt);
+                btn_porteroActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel1.setText("Posiciones:");
+
+        btn_defensa.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        btn_defensa.setText("Defensa");
+        btn_defensa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_defensaActionPerformed(evt);
+            }
+        });
+
+        btn_medio.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        btn_medio.setText("Centrocampista");
+        btn_medio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_medioActionPerformed(evt);
+            }
+        });
+
+        btn_delantero.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        btn_delantero.setText("Delantero");
+        btn_delantero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_delanteroActionPerformed(evt);
+            }
+        });
+
+        tbl_jugadores.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3"
+            }
+        ));
+        jScrollPane1.setViewportView(tbl_jugadores);
+
+        btn_quitarFiltros.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        btn_quitarFiltros.setText("Quitar filtros");
+        btn_quitarFiltros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_quitarFiltrosActionPerformed(evt);
             }
         });
 
@@ -50,40 +124,256 @@ public class Jugadores extends javax.swing.JDialog {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(142, 142, 142)
-                .addComponent(prueba, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(898, Short.MAX_VALUE))
+                .addGap(538, 538, 538)
+                .addComponent(btn_quitarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(322, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(btn_portero, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_defensa, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_medio, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_delantero, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(314, 314, 314))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(373, 373, 373))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(546, 546, 546))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(68, 68, 68)
-                .addComponent(prueba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(498, Short.MAX_VALUE))
+                .addGap(54, 54, 54)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_portero)
+                    .addComponent(btn_defensa)
+                    .addComponent(btn_medio)
+                    .addComponent(btn_delantero))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_quitarFiltros)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void pruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pruebaActionPerformed
+    private void btn_porteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_porteroActionPerformed
         // TODO add your handling code here:
-        //prueba.setText("" + miPadre.getIdEquipo());        
-    }//GEN-LAST:event_pruebaActionPerformed
+        int idEquipo = miPadre.getIdEquipo();
+        visualizarPortero(idEquipo);
+    }//GEN-LAST:event_btn_porteroActionPerformed
+
+    private void btn_defensaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_defensaActionPerformed
+        // TODO add your handling code here:
+        int idEquipo = miPadre.getIdEquipo();
+        visualizarDefensa(idEquipo);
+    }//GEN-LAST:event_btn_defensaActionPerformed
+
+    private void btn_medioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_medioActionPerformed
+        // TODO add your handling code here:
+        int idEquipo = miPadre.getIdEquipo();
+        visualizarCentrocampista(idEquipo);
+    }//GEN-LAST:event_btn_medioActionPerformed
+
+    private void btn_delanteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_delanteroActionPerformed
+        // TODO add your handling code here:
+        int idEquipo = miPadre.getIdEquipo();
+        visualizarDelantero(idEquipo);
+    }//GEN-LAST:event_btn_delanteroActionPerformed
+
+    private void btn_quitarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_quitarFiltrosActionPerformed
+        // TODO add your handling code here:
+        int idEquipo = miPadre.getIdEquipo();
+        visualizarJugadores(idEquipo);
+    }//GEN-LAST:event_btn_quitarFiltrosActionPerformed
+
+    public void visualizarJugadores(int idEquipo) {
+        Statement s = null;
+        ResultSet rs = null;
+        Connection co = null;
+
+        dtmJugadores = new DefaultTableModel();
+        //dtmClasificaion.addColumn("Id");
+        dtmJugadores.addColumn("Nombre");
+        dtmJugadores.addColumn("País");
+        dtmJugadores.addColumn("Posición");
+
+        //Asignamos el modelo a la vista tabla
+        tbl_jugadores.setModel(dtmJugadores);
+        co = miPadre.hazConexion();
+
+        try {
+            s = co.createStatement();
+            rs = s.executeQuery("select nombre, pais, posicion from jugador where idEquip=" + idEquipo);
+            while (rs.next()) {
+                Object[] fila = new Object[3];
+                fila[0] = rs.getObject(1);
+                fila[1] = rs.getObject(2);
+                fila[2] = rs.getObject(3);
+                dtmJugadores.addRow(fila);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void visualizarPortero(int idEquipo) {
+        Statement s = null;
+        ResultSet rs = null;
+        Connection co = null;
+
+        for (int i = 0; i < dtmJugadores.getRowCount(); i++) {
+            dtmJugadores.removeRow(i);
+        }
+
+        dtmJugadores = new DefaultTableModel();
+        //dtmClasificaion.addColumn("Id");
+        dtmJugadores.addColumn("Nombre");
+        dtmJugadores.addColumn("País");
+        dtmJugadores.addColumn("Posición");
+
+        //Asignamos el modelo a la vista tabla
+        tbl_jugadores.setModel(dtmJugadores);
+        co = miPadre.hazConexion();
+
+        try {
+            s = co.createStatement();
+            rs = s.executeQuery("select nombre, pais, posicion from jugador where idEquip=" + idEquipo + " and posicion = 'Portero'");
+            while (rs.next()) {
+                Object[] fila = new Object[3];
+                fila[0] = rs.getObject(1);
+                fila[1] = rs.getObject(2);
+                fila[2] = rs.getObject(3);
+                dtmJugadores.addRow(fila);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void visualizarDefensa(int idEquipo) {
+        Statement s = null;
+        ResultSet rs = null;
+        Connection co = null;
+
+        for (int i = 0; i < dtmJugadores.getRowCount(); i++) {
+            dtmJugadores.removeRow(i);
+        }
+
+        dtmJugadores = new DefaultTableModel();
+        //dtmClasificaion.addColumn("Id");
+        dtmJugadores.addColumn("Nombre");
+        dtmJugadores.addColumn("País");
+        dtmJugadores.addColumn("Posición");
+
+        //Asignamos el modelo a la vista tabla
+        tbl_jugadores.setModel(dtmJugadores);
+        co = miPadre.hazConexion();
+
+        try {
+            s = co.createStatement();
+            rs = s.executeQuery("select nombre, pais, posicion from jugador where idEquip=" + idEquipo + " and posicion = 'Defensa'");
+            while (rs.next()) {
+                Object[] fila = new Object[3];
+                fila[0] = rs.getObject(1);
+                fila[1] = rs.getObject(2);
+                fila[2] = rs.getObject(3);
+                dtmJugadores.addRow(fila);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void visualizarCentrocampista(int idEquipo) {
+        Statement s = null;
+        ResultSet rs = null;
+        Connection co = null;
+
+        for (int i = 0; i < dtmJugadores.getRowCount(); i++) {
+            dtmJugadores.removeRow(i);
+        }
+
+        dtmJugadores = new DefaultTableModel();
+        //dtmClasificaion.addColumn("Id");
+        dtmJugadores.addColumn("Nombre");
+        dtmJugadores.addColumn("País");
+        dtmJugadores.addColumn("Posición");
+
+        //Asignamos el modelo a la vista tabla
+        tbl_jugadores.setModel(dtmJugadores);
+        co = miPadre.hazConexion();
+
+        try {
+            s = co.createStatement();
+            rs = s.executeQuery("select nombre, pais, posicion from jugador where idEquip=" + idEquipo + " and posicion = 'Centrocampista'");
+            while (rs.next()) {
+                Object[] fila = new Object[3];
+                fila[0] = rs.getObject(1);
+                fila[1] = rs.getObject(2);
+                fila[2] = rs.getObject(3);
+                dtmJugadores.addRow(fila);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void visualizarDelantero(int idEquipo) {
+        Statement s = null;
+        ResultSet rs = null;
+        Connection co = null;
+
+        for (int i = 0; i < dtmJugadores.getRowCount(); i++) {
+            dtmJugadores.removeRow(i);
+        }
+
+        dtmJugadores = new DefaultTableModel();
+        //dtmClasificaion.addColumn("Id");
+        dtmJugadores.addColumn("Nombre");
+        dtmJugadores.addColumn("País");
+        dtmJugadores.addColumn("Posición");
+
+        //Asignamos el modelo a la vista tabla
+        tbl_jugadores.setModel(dtmJugadores);
+        co = miPadre.hazConexion();
+
+        try {
+            s = co.createStatement();
+            rs = s.executeQuery("select nombre, pais, posicion from jugador where idEquip=" + idEquipo + " and posicion = 'Delantero'");
+            while (rs.next()) {
+                Object[] fila = new Object[3];
+                fila[0] = rs.getObject(1);
+                fila[1] = rs.getObject(2);
+                fila[2] = rs.getObject(3);
+                dtmJugadores.addRow(fila);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -128,7 +418,14 @@ public class Jugadores extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_defensa;
+    private javax.swing.JButton btn_delantero;
+    private javax.swing.JButton btn_medio;
+    private javax.swing.JButton btn_portero;
+    private javax.swing.JButton btn_quitarFiltros;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField prueba;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tbl_jugadores;
     // End of variables declaration//GEN-END:variables
 }
