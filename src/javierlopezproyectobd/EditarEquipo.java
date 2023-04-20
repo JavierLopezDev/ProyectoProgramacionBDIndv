@@ -29,6 +29,10 @@ public class EditarEquipo extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         miPadre = (VentanaProyectoBD) parent;
+        txf_nombre.setText("" + miPadre.getNombreEquipo());
+        txf_puntos.setText("" + miPadre.getPuntos());
+        txf_estadio.setText("" + miPadre.getEstadio());
+        txf_ciudad.setText("" + miPadre.getCiudad());
     }
 
     /**
@@ -154,12 +158,15 @@ public class EditarEquipo extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_addEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addEquipoActionPerformed
         // TODO add your handling code here:
         int idEquipo = miPadre.getIdEquipo();
-        obtenerIdEstadio(idEquipo);
+        int idEstadio = obtenerIdEstadio(idEquipo);
+        editarEstadio(idEstadio);
+        editarEquipo(idEquipo);
     }//GEN-LAST:event_btn_addEquipoActionPerformed
 
     public int obtenerIdEstadio(int idEquipo) {
@@ -182,7 +189,7 @@ public class EditarEquipo extends javax.swing.JDialog {
         return (int) id;
     }
 
-    public void editarEquipo() {
+    public void editarEquipo(int id) {
         int res = 0;
         PreparedStatement ps = null;
         Connection conex = miPadre.hazConexion();
@@ -194,15 +201,43 @@ public class EditarEquipo extends javax.swing.JDialog {
             nombre = txf_nombre.getText();
             puntos = Integer.parseInt(txf_puntos.getText());
 
-            ps = conex.prepareStatement("UPDATE persona SET Nombre=?,Direccion=?,Telefono=? WHERE id=?");
+            ps = conex.prepareStatement("UPDATE equipo SET Nombre=?,Puntuacion=? WHERE idEquipo=?");
             ps.setString(1, nombre);
             ps.setInt(2, puntos);
+            ps.setInt(3,id);
 
             res = ps.executeUpdate();
             if (res > 0) {
-                JOptionPane.showMessageDialog(null, "Persona modificada correctamente");
+                JOptionPane.showMessageDialog(null, "Equipo modificado correctamente");
             } else {
-                JOptionPane.showMessageDialog(null, "ERROR. No se modificó ninguna persona");
+                JOptionPane.showMessageDialog(null, "ERROR. No se modificó ningun equipo");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EditarEquipo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void editarEstadio(int id) {
+        int res = 0;
+        PreparedStatement ps = null;
+        Connection conex = miPadre.hazConexion();
+
+        try {
+            String nombre, ciudad;
+
+            nombre = txf_nombre.getText();
+            ciudad = txf_ciudad.getText();
+
+            ps = conex.prepareStatement("UPDATE estadio SET Nombre=?,Ciudad=? WHERE idEstadio=?");
+            ps.setString(1, nombre);
+            ps.setString(2, ciudad);
+            ps.setInt(3,id);
+
+            res = ps.executeUpdate();
+            if (res > 0) {
+                JOptionPane.showMessageDialog(null, "Estadio modificado correctamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "ERROR. No se modificó ningun estadio");
             }
         } catch (SQLException ex) {
             Logger.getLogger(EditarEquipo.class.getName()).log(Level.SEVERE, null, ex);

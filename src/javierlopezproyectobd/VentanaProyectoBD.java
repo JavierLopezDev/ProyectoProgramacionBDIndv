@@ -23,8 +23,8 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
     public static final String USERNAME = "root";
     public static final String PASSWORD = "toor";
     DefaultTableModel dtmClasificaion = null;
-    
-    public int getIdEquipo(){
+
+    public int getIdEquipo() {
         int id = obtenerIdEquipo(txf_nombreEquip.getText());
         return id;
     }
@@ -43,7 +43,6 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         btn_jugadores.setEnabled(false);
         btn_editarEquipo.setEnabled(false);
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -72,6 +71,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         btn_addEquipo = new javax.swing.JButton();
         btn_editarEquipo = new javax.swing.JButton();
         btn_eliminarEquipo = new javax.swing.JButton();
+        btn_sync = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -152,6 +152,13 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
             }
         });
 
+        btn_sync.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javierlopezproyectobd/sync_blue.png"))); // NOI18N
+        btn_sync.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_syncActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -188,8 +195,11 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
                         .addGap(91, 91, 91)
                         .addComponent(btn_editarEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_sync, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 556, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(107, 107, 107))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -229,15 +239,20 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btn_editarEquipo))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(49, 49, 49)
+                                .addComponent(jLabel1))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_sync)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_eliminarEquipo)
                     .addComponent(btn_addEquipo))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -277,7 +292,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
     private void btn_consultaEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultaEquipoActionPerformed
         // TODO add your handling code here:
         int i = tbl_Clasificacion.getSelectedRow(), id;
-        String estadio;        
+        String estadio;
         //dtmEstadio.removeRow(0);        
         txf_nombreEquip.setText("" + dtmClasificaion.getValueAt(i, 0));
         txf_puntos.setText("" + dtmClasificaion.getValueAt(i, 1));
@@ -306,6 +321,17 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
     private void btn_eliminarEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarEquipoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_eliminarEquipoActionPerformed
+
+    private void btn_syncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_syncActionPerformed
+        // TODO add your handling code here:
+        visualizarClasificacion();
+        txf_nombreEquip.setText("");
+        txf_puntos.setText("");
+        txf_estadio.setText("");
+        txf_ciudad.setText("");
+        btn_jugadores.setEnabled(false);
+        btn_editarEquipo.setEnabled(false);
+    }//GEN-LAST:event_btn_syncActionPerformed
 
     public static Connection hazConexion() {
         Connection conexion = null;
@@ -345,7 +371,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
             Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public int obtenerIdEquipo(String equipo) {
         Statement s = null;
         ResultSet rs = null;
@@ -357,12 +383,12 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
             s = co.createStatement();
             rs = s.executeQuery("select idEquipo from equipo where nombre = " + '"' + equipo + '"');
             while (rs.next()) {
-                id = rs.getObject(1);                
+                id = rs.getObject(1);
             }
         } catch (SQLException ex) {
             Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return (int) id;
     }
 
@@ -372,7 +398,6 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         Connection co = null;
         co = hazConexion();
         Object estadio = null;
-        
 
         try {
             s = co.createStatement();
@@ -384,8 +409,21 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return (String) estadio;
+    }
+
+    public String getNombreEquipo() {
+        return txf_nombreEquip.getText();
+    }
+    public int getPuntos() {
+        return Integer.parseInt(txf_puntos.getText());
+    }
+    public String getEstadio() {
+        return txf_estadio.getText();
+    }
+    public String getCiudad() {
+        return txf_ciudad.getText();
     }
 
     /**
@@ -429,6 +467,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
     private javax.swing.JButton btn_editarEquipo;
     private javax.swing.JButton btn_eliminarEquipo;
     private javax.swing.JButton btn_jugadores;
+    private javax.swing.JButton btn_sync;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
