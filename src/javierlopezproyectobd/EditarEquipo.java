@@ -4,6 +4,7 @@
  */
 package javierlopezproyectobd;
 
+import java.security.interfaces.EdECKey;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,20 +13,19 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author usuario
  */
-public class AnadirEquipo extends javax.swing.JDialog {
+public class EditarEquipo extends javax.swing.JDialog {
 
     private VentanaProyectoBD miPadre = null;
 
     /**
-     * Creates new form AnadirEquipo
+     * Creates new form EditarEquipo
      */
-    public AnadirEquipo(java.awt.Frame parent, boolean modal) {
+    public EditarEquipo(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         miPadre = (VentanaProyectoBD) parent;
@@ -57,7 +57,7 @@ public class AnadirEquipo extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(102, 204, 255));
 
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jLabel1.setText("AÑADIR EQUIPO:");
+        jLabel1.setText("EDITAR EQUIPO:");
 
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -76,7 +76,7 @@ public class AnadirEquipo extends javax.swing.JDialog {
         jLabel5.setText("CIUDAD");
 
         btn_addEquipo.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        btn_addEquipo.setText("AÑADIR");
+        btn_addEquipo.setText("EDITAR");
         btn_addEquipo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_addEquipoActionPerformed(evt);
@@ -133,13 +133,10 @@ public class AnadirEquipo extends javax.swing.JDialog {
                         .addComponent(txf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(24, 24, 24)
-                        .addComponent(txf_puntos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(txf_estadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(txf_ciudad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txf_puntos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txf_estadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txf_ciudad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addComponent(btn_addEquipo)
                 .addContainerGap(29, Short.MAX_VALUE))
@@ -157,17 +154,15 @@ public class AnadirEquipo extends javax.swing.JDialog {
         );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_addEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addEquipoActionPerformed
-        // TODO add your handling code here:        
-        insertarEstadio();
-        int idEstadio = obtenerIdEstadio();
-        insertarEquipo(idEstadio);        
+        // TODO add your handling code here:
+        int idEquipo = miPadre.getIdEquipo();
+        obtenerIdEstadio(idEquipo);
     }//GEN-LAST:event_btn_addEquipoActionPerformed
 
-    public int obtenerIdEstadio() {
+    public int obtenerIdEstadio(int idEquipo) {
         Statement s = null;
         ResultSet rs = null;
         Connection co = null;
@@ -176,54 +171,41 @@ public class AnadirEquipo extends javax.swing.JDialog {
 
         try {
             s = co.createStatement();
-            rs = s.executeQuery("select max(idEstadio) from estadio");
+            rs = s.executeQuery("select idEstadio from estadio, equipo where equipo.idEstad = estadio.idEstadio and idEquipo =" + idEquipo);
             while (rs.next()) {
-                id = rs.getObject(1);                
+                id = rs.getObject(1);
             }
         } catch (SQLException ex) {
             Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return (int) id;
     }
-    public void insertarEquipo(int idEstadio) {
+
+    public void editarEquipo() {
         int res = 0;
         PreparedStatement ps = null;
         Connection conex = miPadre.hazConexion();
 
         try {
-            ps = conex.prepareStatement("INSERT into equipo(Nombre,Puntuacion,IdEstad) VALUES (?,?,?)");
-            ps.setString(1, txf_nombre.getText());
-            ps.setInt(2, Integer.parseInt(txf_puntos.getText()));
-            ps.setInt(3, idEstadio);
-            res = ps.executeUpdate();
-            if (res > 0) {
-                JOptionPane.showMessageDialog(null, "Equipo añadido correctamente");
-            } else {
-                JOptionPane.showMessageDialog(null, "ERROR. No se añadió ningun equipo");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(AnadirEquipo.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-        public void insertarEstadio() {
-        int res = 0;
-        PreparedStatement ps = null;
-        Connection conex = miPadre.hazConexion();
+            String nombre;
+            int puntos;
 
-        try {
-            ps = conex.prepareStatement("INSERT into estadio(Nombre,Ciudad) VALUES (?,?)");
-            ps.setString(1, txf_estadio.getText());
-            ps.setString(2, (txf_ciudad.getText()));
+            nombre = txf_nombre.getText();
+            puntos = Integer.parseInt(txf_puntos.getText());
+
+            ps = conex.prepareStatement("UPDATE persona SET Nombre=?,Direccion=?,Telefono=? WHERE id=?");
+            ps.setString(1, nombre);
+            ps.setInt(2, puntos);
+
             res = ps.executeUpdate();
             if (res > 0) {
-                JOptionPane.showMessageDialog(null, "Estadio añadido correctamente");
+                JOptionPane.showMessageDialog(null, "Persona modificada correctamente");
             } else {
-                JOptionPane.showMessageDialog(null, "ERROR. No se añadió ningun estadio");
+                JOptionPane.showMessageDialog(null, "ERROR. No se modificó ninguna persona");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(AnadirEquipo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EditarEquipo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -244,20 +226,20 @@ public class AnadirEquipo extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AnadirEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditarEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AnadirEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditarEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AnadirEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditarEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AnadirEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditarEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AnadirEquipo dialog = new AnadirEquipo(new javax.swing.JFrame(), true);
+                EditarEquipo dialog = new EditarEquipo(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

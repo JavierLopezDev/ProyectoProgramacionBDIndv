@@ -41,6 +41,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         }
         visualizarClasificacion();
         btn_jugadores.setEnabled(false);
+        btn_editarEquipo.setEnabled(false);
     }
     
 
@@ -69,6 +70,8 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         btn_jugadores = new javax.swing.JButton();
         btn_consultaEquipo = new javax.swing.JButton();
         btn_addEquipo = new javax.swing.JButton();
+        btn_editarEquipo = new javax.swing.JButton();
+        btn_eliminarEquipo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -135,11 +138,29 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
             }
         });
 
+        btn_editarEquipo.setText("EDITAR EQUIPO");
+        btn_editarEquipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_editarEquipoActionPerformed(evt);
+            }
+        });
+
+        btn_eliminarEquipo.setText("ELIMINAR EQUIPO");
+        btn_eliminarEquipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_eliminarEquipoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(305, 305, 305)
+                .addComponent(lbl_titulo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(116, 116, 116)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -164,16 +185,19 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
                                         .addComponent(txf_ciudad, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(104, 104, 104))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btn_addEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(91, 91, 91)
+                        .addComponent(btn_editarEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 556, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(107, 107, 107))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(305, 305, 305)
-                .addComponent(lbl_titulo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_addEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_eliminarEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(227, 227, 227))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -203,13 +227,17 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
                             .addComponent(btn_jugadores)
                             .addComponent(btn_consultaEquipo))
                         .addGap(18, 18, 18)
-                        .addComponent(btn_addEquipo))
+                        .addComponent(btn_editarEquipo))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_eliminarEquipo)
+                    .addComponent(btn_addEquipo))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -237,6 +265,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         txf_estadio.setText("");
         txf_ciudad.setText("");
         btn_jugadores.setEnabled(false);
+        btn_editarEquipo.setEnabled(false);
     }//GEN-LAST:event_tbl_ClasificacionMouseClicked
 
     private void btn_jugadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_jugadoresActionPerformed
@@ -259,11 +288,24 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         txf_estadio.setText("" + datosEstadio[0]);
         txf_ciudad.setText("" + datosEstadio[1]);
         btn_jugadores.setEnabled(true);
+        btn_editarEquipo.setEnabled(true);
     }//GEN-LAST:event_btn_consultaEquipoActionPerformed
 
     private void btn_addEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addEquipoActionPerformed
         // TODO add your handling code here:
+        AnadirEquipo addEquipo = new AnadirEquipo(this, true);
+        addEquipo.setVisible(true);
     }//GEN-LAST:event_btn_addEquipoActionPerformed
+
+    private void btn_editarEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editarEquipoActionPerformed
+        // TODO add your handling code here:
+        EditarEquipo editEquipo = new EditarEquipo(this, true);
+        editEquipo.setVisible(true);
+    }//GEN-LAST:event_btn_editarEquipoActionPerformed
+
+    private void btn_eliminarEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarEquipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_eliminarEquipoActionPerformed
 
     public static Connection hazConexion() {
         Connection conexion = null;
@@ -384,6 +426,8 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_addEquipo;
     private javax.swing.JButton btn_consultaEquipo;
+    private javax.swing.JButton btn_editarEquipo;
+    private javax.swing.JButton btn_eliminarEquipo;
     private javax.swing.JButton btn_jugadores;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
