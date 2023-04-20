@@ -6,11 +6,13 @@ package javierlopezproyectobd;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -320,6 +322,8 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
 
     private void btn_eliminarEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarEquipoActionPerformed
         // TODO add your handling code here:
+        eliminarEquipo();
+        eliminarEstadio();
     }//GEN-LAST:event_btn_eliminarEquipoActionPerformed
 
     private void btn_syncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_syncActionPerformed
@@ -413,15 +417,62 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         return (String) estadio;
     }
 
+    public void eliminarEstadio() {
+        int res = 0;
+        int i = tbl_Clasificacion.getSelectedRow();
+        String estadio = (String) dtmClasificaion.getValueAt(i, 2);
+        PreparedStatement ps = null;
+        Connection conex = hazConexion();
+
+        try {
+            ps = conex.prepareStatement("DELETE FROM estadio WHERE nombre=?");
+            ps.setString(1, estadio);
+
+            res = ps.executeUpdate();
+            if (res > 0) {
+                JOptionPane.showMessageDialog(null, "Estadio eliminado correctamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "ERROR. No se eliminó ningun estadio");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void eliminarEquipo() {
+        int res = 0;
+        int i = tbl_Clasificacion.getSelectedRow();
+        String nombre = (String) dtmClasificaion.getValueAt(i, 0);
+        PreparedStatement ps = null;
+        Connection conex = hazConexion();
+
+        try {
+            ps = conex.prepareStatement("DELETE FROM estadio WHERE nombre=?");
+            ps.setString(1, nombre);
+
+            res = ps.executeUpdate();
+            if (res > 0) {
+                JOptionPane.showMessageDialog(null, "Equipo eliminado correctamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "ERROR. No se eliminó ningun equipo");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public String getNombreEquipo() {
         return txf_nombreEquip.getText();
     }
+
     public int getPuntos() {
         return Integer.parseInt(txf_puntos.getText());
     }
+
     public String getEstadio() {
         return txf_estadio.getText();
     }
+
     public String getCiudad() {
         return txf_ciudad.getText();
     }
