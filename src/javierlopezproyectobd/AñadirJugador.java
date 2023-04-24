@@ -137,6 +137,7 @@ public class AñadirJugador extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_addEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addEquipoActionPerformed
