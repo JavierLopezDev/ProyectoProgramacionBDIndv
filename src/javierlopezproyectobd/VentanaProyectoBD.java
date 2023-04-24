@@ -44,6 +44,8 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         visualizarClasificacion();
         btn_jugadores.setEnabled(false);
         btn_editarEquipo.setEnabled(false);
+        btn_eliminarEquipo.setEnabled(false);
+        btn_consultaEquipo.setEnabled(false);
     }
 
     /**
@@ -283,6 +285,8 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         txf_ciudad.setText("");
         btn_jugadores.setEnabled(false);
         btn_editarEquipo.setEnabled(false);
+        btn_eliminarEquipo.setEnabled(true);
+        btn_consultaEquipo.setEnabled(true);
     }//GEN-LAST:event_tbl_ClasificacionMouseClicked
 
     private void btn_jugadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_jugadoresActionPerformed
@@ -305,7 +309,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         txf_estadio.setText("" + datosEstadio[0]);
         txf_ciudad.setText("" + datosEstadio[1]);
         btn_jugadores.setEnabled(true);
-        btn_editarEquipo.setEnabled(true);
+        btn_editarEquipo.setEnabled(true);        
     }//GEN-LAST:event_btn_consultaEquipoActionPerformed
 
     private void btn_addEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addEquipoActionPerformed
@@ -322,8 +326,10 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
 
     private void btn_eliminarEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarEquipoActionPerformed
         // TODO add your handling code here:
+        int i = tbl_Clasificacion.getSelectedRow();
+        int idEstadio = obtenerIdEstadio(obtenerIdEquipo((String) dtmClasificaion.getValueAt(i, 0)));        
         eliminarEquipo();
-        eliminarEstadio();
+        eliminarEstadio(idEstadio);
     }//GEN-LAST:event_btn_eliminarEquipoActionPerformed
 
     private void btn_syncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_syncActionPerformed
@@ -417,16 +423,14 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         return (String) estadio;
     }
 
-    public void eliminarEstadio() {
+    public void eliminarEstadio(int idEstadio) {
         int res = 0;
-        int i = tbl_Clasificacion.getSelectedRow();
-        String estadio = (String) dtmClasificaion.getValueAt(i, 2);
         PreparedStatement ps = null;
         Connection conex = hazConexion();
 
         try {
-            ps = conex.prepareStatement("DELETE FROM estadio WHERE nombre=?");
-            ps.setString(1, estadio);
+            ps = conex.prepareStatement("DELETE FROM estadio WHERE idEstadio=?");
+            ps.setInt(1, idEstadio);
 
             res = ps.executeUpdate();
             if (res > 0) {
@@ -438,6 +442,26 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
             Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public int obtenerIdEstadio(int idEquipo) {
+        Statement s = null;
+        ResultSet rs = null;
+        Connection co = null;
+        co = hazConexion();
+        Object id = null;
+
+        try {
+            s = co.createStatement();
+            rs = s.executeQuery("select idEstadio from estadio, equipo where equipo.idEstad = estadio.idEstadio and idEquipo =" + idEquipo);
+            while (rs.next()) {
+                id = rs.getObject(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return (int) id;
+    }
 
     public void eliminarEquipo() {
         int res = 0;
@@ -447,7 +471,7 @@ public class VentanaProyectoBD extends javax.swing.JFrame {
         Connection conex = hazConexion();
 
         try {
-            ps = conex.prepareStatement("DELETE FROM estadio WHERE nombre=?");
+            ps = conex.prepareStatement("DELETE FROM equipo WHERE nombre=?");
             ps.setString(1, nombre);
 
             res = ps.executeUpdate();
