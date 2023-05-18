@@ -5,19 +5,22 @@
 package javierlopezproyectobd;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import static javierlopezproyectobd.VentanaProyectoBD.hazConexion;
 
 /**
  *
  * @author usuario
  */
 public class Entrenador extends javax.swing.JDialog {
-    
+
     private VentanaProyectoBD miPadre = null;
     DefaultTableModel dtmEntrenadores = null;
 
@@ -148,6 +151,7 @@ public class Entrenador extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbl_entrenadorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_entrenadorMouseClicked
@@ -157,14 +161,14 @@ public class Entrenador extends javax.swing.JDialog {
 
     private void btn_addEntrenadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addEntrenadorActionPerformed
         // TODO add your handling code here:
-        AñadirJugador addJugador = new AñadirJugador(miPadre, true);
-        addJugador.setVisible(true);
+        AñadirEntrenador addEntrenador = new AñadirEntrenador(miPadre, true);
+        addEntrenador.setVisible(true);
     }//GEN-LAST:event_btn_addEntrenadorActionPerformed
 
     private void btn_eliminarEntrenadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarEntrenadorActionPerformed
         // TODO add your handling code here:
         int idEquipo = miPadre.getIdEquipo();
-        //eliminarEntrenador(idEquipo);
+        eliminarEntrenador(idEquipo);
         visualizarEntrenador(idEquipo);
         btn_eliminarEntrenador.setEnabled(false);
     }//GEN-LAST:event_btn_eliminarEntrenadorActionPerformed
@@ -176,7 +180,7 @@ public class Entrenador extends javax.swing.JDialog {
         btn_eliminarEntrenador.setEnabled(false);
     }//GEN-LAST:event_btn_syncActionPerformed
 
-     public void visualizarEntrenador(int idEquipo) {
+    public void visualizarEntrenador(int idEquipo) {
         Statement s = null;
         ResultSet rs = null;
         Connection co = null;
@@ -203,7 +207,30 @@ public class Entrenador extends javax.swing.JDialog {
             Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    public void eliminarEntrenador(int idEquipo) {
+        int res = 0;
+        int i = tbl_entrenador.getSelectedRow();
+        String nombre = (String) dtmEntrenadores.getValueAt(i, 0);
+        PreparedStatement ps = null;
+        Connection conex = hazConexion();
+
+        try {
+            ps = conex.prepareStatement("DELETE FROM entrenador WHERE nombre=? and idEquip=?");
+            ps.setString(1, nombre);
+            ps.setInt(2, idEquipo);
+
+            res = ps.executeUpdate();
+            if (res > 0) {
+                JOptionPane.showMessageDialog(null, "Entrenador eliminado correctamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "ERROR. No se eliminó ningun entrenador");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaProyectoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
